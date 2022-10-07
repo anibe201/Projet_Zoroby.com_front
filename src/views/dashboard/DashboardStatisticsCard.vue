@@ -1,23 +1,22 @@
 <template>
   <v-card>
-    <v-card-title class="align-start">
-      <span class="font-weight-semibold">Site de Petites Annonces en Côte d’Ivoire</span>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        small
-        class="me-n3 mt-n2"
-      >
-        <v-icon>
-          {{ icons.mdiDotsVertical }}
-        </v-icon>
-      </v-btn>
-    </v-card-title>
+    <div style="display: flex; justify-content: center; align-items: center">
+      <v-card-title class="align-start">
+        <span class="font-weight-semibold">
+          <h2 style="margin: 10px">
+          Site de Petites Annonces en Côte d’Ivoire
+        </h2>
+        <h6 class="text-center">Retrouver tous vos produits que vous cherchez dans les différentes catégories</h6>
+        </span>
+        <v-spacer></v-spacer>
+      </v-card-title>
+    </div>
+    <!-- <div style="display: flex; justify-content: center; align-items: center; margin: 30px"> -->
 
-    <v-card-subtitle class="mb-8 mt-n5">
-      <span class="font-weight-semibold text--primary me-1">Total 48.5% Growth</span>
-      <span>😎 this month</span>
-    </v-card-subtitle>
+    <!-- <v-card-subtitle class="mb-8 mt-n5">
+      <span class="font-weight-semibold text--primary me-1">Retrouver tous vos produits que vous cherchez dans les différentes catégories</span>
+    </v-card-subtitle> -->
+  <!-- </div> -->
 
     <vs-card-group>
       <vs-card>
@@ -25,7 +24,7 @@
           <h3 class="text-center">Téléphones - Tablettes</h3>
         </template>
         <template #img>
-          <!-- <img src="../../assets/images/pages/card-basic-mobile.png" alt=""> -->
+          <img src="../../assets/img/categories/17.png" width="50" alt="">
         </template>
         <template #text>
           <p>
@@ -61,7 +60,7 @@
           <h3 class="text-center">Informatique & Multimédia</h3>
         </template>
         <template #img>
-          <!-- <img src="../assets/images/pages/card-basic-mobile.png" alt=""> -->
+          <img src="../../assets/img/categories/22.jpg" alt="">
         </template>
         <template #text>
           <p>
@@ -94,7 +93,7 @@
           <h3 class="text-center">Véhicules</h3>
         </template>
         <template #img>
-          <!-- <img src="../assets/images/pages/card-basic-mobile.png" alt=""> -->
+          <img src="../../assets/img/categories/23.jpg" alt="">
         </template>
         <template #text>
           <p>

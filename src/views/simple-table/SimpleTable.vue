@@ -1,77 +1,74 @@
 <template>
-  <v-row>
-    <!-- basic -->
-    <v-col cols="12">
-      <v-card>
-        <v-card-title>Basic</v-card-title>
-        <demo-simple-table-basic></demo-simple-table-basic>
-      </v-card>
-    </v-col>
+  <v-card id="account-setting-card">
+    <!-- tabs -->
+    <v-tabs v-model="tab" show-arrows >
+      <v-tab v-for="tab in tabs" :key="tab.icon" >
+        <v-icon size="20"  class="me-3"  >
+          {{ tab.icon }}
+        </v-icon>
+        <span>{{ tab.title }}</span>
+      </v-tab>
+    </v-tabs>
 
-    <!-- dark -->
-    <v-col cols="12">
-      <v-card>
-        <v-card-title>Dark</v-card-title>
-        <v-card-text>
-          Use <code>dark</code> prop to switch table to the dark theme.
-        </v-card-text>
-        <demo-simple-table-dark></demo-simple-table-dark>
-      </v-card>
-    </v-col>
-
-    <!-- Dense -->
-    <v-col cols="12">
-      <v-card>
-        <v-card-title>Dense</v-card-title>
-        <v-card-text>
-          You can show a dense version of the table by using the <code>dense</code> prop.
-        </v-card-text>
-        <demo-simple-table-dense></demo-simple-table-dense>
-      </v-card>
-    </v-col>
-
-    <!-- height -->
-    <v-col cols="12">
-      <v-card>
-        <v-card-title>Height</v-card-title>
-        <v-card-text>
-          Use the <code>height</code> prop to set the height of the table.
-        </v-card-text>
-        <demo-simple-table-height></demo-simple-table-height>
-      </v-card>
-    </v-col>
-
-    <!-- fixed header -->
-    <v-col cols="12">
-      <v-card>
-        <v-card-title>Fixed header</v-card-title>
-        <v-card-text>
-          Use the <code>fixed-header</code> prop together with the <code>height</code> prop to fix the header to the top of the table.
-        </v-card-text>
-
-        <demo-simple-table-fixed-header></demo-simple-table-fixed-header>
-      </v-card>
-    </v-col>
-  </v-row>
+    <!-- tabs item -->
+    <v-tabs-items v-model="tab">
+      <v-tab-item>
+        <contact></contact>
+      </v-tab-item>
+    </v-tabs-items>
+  </v-card>
 </template>
 
 <script>
-import DemoSimpleTableBasic from './demos/DemoSimpleTableBasic.vue'
-import DemoSimpleTableDark from './demos/DemoSimpleTableDark.vue'
-import DemoSimpleTableDense from './demos/DemoSimpleTableDense.vue'
-import DemoSimpleTableHeight from './demos/DemoSimpleTableHeight.vue'
-import DemoSimpleTableFixedHeader from './demos/DemoSimpleTableFixedHeader.vue'
+import { mdiAccountOutline, mdiLockOpenOutline, mdiInformationOutline } from '@mdi/js'
+import { ref } from '@vue/composition-api'
+
+import contact from './Contacts.vue'
 
 export default {
   components: {
-    DemoSimpleTableBasic,
-    DemoSimpleTableDark,
-    DemoSimpleTableDense,
-    DemoSimpleTableHeight,
-    DemoSimpleTableFixedHeader,
+    contact,
   },
   setup() {
-    return {}
+    const tab = ref('')
+
+    // tabs
+    const tabs = [
+      { title: '', },
+    ]
+
+    // account settings data
+    const accountSettingData = {
+      account: {
+        avatarImg: require('@/assets/images/avatars/1.png'),
+        username: 'johnDoe',
+        name: 'john Doe',
+        email: 'johnDoe@example.com',
+        role: 'Admin',
+        status: 'Active',
+        company: 'Google.inc',
+      },
+      information: {
+        bio: 'The name’s John Deo. I am a tireless seeker of knowledge, occasional purveyor of wisdom and also, coincidentally, a graphic designer. Algolia helps businesses across industries quickly create relevant 😎, scaLabel 😀, and lightning 😍 fast search and discovery experiences.',
+        birthday: 'February 22, 1995',
+        phone: '954-006-0844',
+        website: 'https://themeselection.com/',
+        country: 'USA',
+        languages: ['English', 'Spanish'],
+        gender: 'male',
+      },
+    }
+
+    return {
+      tab,
+      tabs,
+      accountSettingData,
+      icons: {
+        // mdiAccountOutline,
+        // mdiLockOpenOutline,
+        // mdiInformationOutline,
+      },
+    }
   },
 }
 </script>

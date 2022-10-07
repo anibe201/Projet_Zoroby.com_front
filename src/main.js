@@ -17,6 +17,8 @@ import Button from 'primevue/button';
 import ConfirmPopup from 'primevue/confirmpopup';
 import Toast from 'primevue/toast';
 
+import Paginator from 'primevue/paginator';
+Vue.component('Paginator', Paginator);
 
 
 Vue.use(PrimeVue);

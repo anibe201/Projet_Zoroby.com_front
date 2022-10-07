@@ -34,14 +34,14 @@
               order="1"
               order-lg="2"
             >
-              <v-card-title> <strong> Samsung Galaxy A23 64Go </strong>
+              <v-card-title> <strong> {{ show.product_name }} </strong>
                 <v-spacer></v-spacer>
 
-                <h2>90 000 FCFA</h2>
+                <h2>{{ show.product_price }} FCFA</h2>
               </v-card-title>
               <v-card-text>
               </v-card-text>
-              Samsung A23 casi neuf importé tout pass propre aucun problème sur le téléphone sans carton ni accessoires
+              {{ show.product_description }}
               <v-card-text>
               <br>
               </v-card-text>
@@ -162,6 +162,9 @@
 
 <script>
 import { ref } from '@vue/composition-api'
+import { mapActions, mapGetters } from "vuex";
+
+
 import {
   mdiChevronUp,
   mdiChevronDown,
@@ -176,10 +179,12 @@ import {
 import CarouselRecentProduit from './CarouselRecentProduit.vue'
 
 export default {
+
     setup() {
         const isCardDetailsVisible = false;
         const rating = ref(5);
         return {
+            show: "",
             isCardDetailsVisible,
             rating,
             items: [
@@ -210,7 +215,36 @@ export default {
             },
         };
     },
-    components: { CarouselRecentProduit }
+
+    components: {
+      CarouselRecentProduit
+    },
+
+    mounted() {
+      // this.getTutorial(this.$route.params.id);
+    },
+
+    watch: {
+    // <!-------------------------------------SECTION WATCH PRODUITS------------------------------------------------------------------------------------->
+    produit() {
+      console.log(this.produit);
+      if (this.produit) {
+        this.show = this.produit;
+      }
+    },
+    },
+
+    created () {
+      this.GET_SINGLE_PRODUIT(this.$route.params.id);
+    },
+
+    computed: {
+      ...mapGetters(["produit"]),
+    },
+
+    methods: {
+      ...mapActions(["GET_SINGLE_PRODUIT"]),
+    }
 }
 </script>
 

@@ -15,7 +15,7 @@
         class="d-flex align-center text-decoration-none"
       >
         <v-img
-          :src="require('@/assets/images/logos/logo.svg')"
+          :src="require('@/assets/images/logos/logo.png')"
           max-height="30px"
           max-width="30px"
           alt="logo"
@@ -60,8 +60,8 @@
           :to="{ name: 'modifier-produit' }"
         ></nav-menu-link>
       </nav-menu-group>
-      <nav-menu-section-title title="USER INTERFACE"></nav-menu-section-title>
-      <nav-menu-link
+      <nav-menu-section-title title="A PROPOS"></nav-menu-section-title>
+      <!-- <nav-menu-link
         title="Créer une aide"
         :to="{ name: 'typography' }"
         :icon="icons.mdiAlphaTBoxOutline"
@@ -70,7 +70,7 @@
         title="Recherche d'aide"
         :to="{ name: 'icons' }"
         :icon="icons.mdiEyeOutline"
-      ></nav-menu-link>
+      ></nav-menu-link> -->
       <nav-menu-link
         title="FAQ"
         :to="{ name: 'cards' }"
@@ -81,11 +81,11 @@
         :to="{ name: 'simple-table' }"
         :icon="icons.mdiTable"
       ></nav-menu-link>
-      <nav-menu-link
+      <!-- <nav-menu-link
         title="Qui sommes-nous ?"
         :to="{ name: 'form-layouts' }"
         :icon="icons.mdiFormSelect"
-      ></nav-menu-link>
+      ></nav-menu-link> -->
     </v-list>
   </v-navigation-drawer>
 </template>

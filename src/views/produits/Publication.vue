@@ -11,19 +11,19 @@
       <v-form class="multi-col-validation mt-6">
         <v-row>
           <v-col md="6" cols="12"  >
-            <v-text-field label="Ville" dense outlined ></v-text-field>
+            <v-text-field label="Ville" dense outlined v-model="product_location" ></v-text-field>
           </v-col>
 
           <v-col md="6" cols="12" >
-            <v-select dense outlined label="Catégorie" :items="status" ></v-select>
+            <v-select dense outlined label="Catégorie" :items="status" v-model="product_categorie"></v-select>
           </v-col>
 
           <v-col cols="12" md="6"  >
-            <v-text-field label="Titre" dense outlined ></v-text-field>
+            <v-text-field label="Titre" dense outlined v-model="product_name"></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6" >
-            <v-text-field dense label="Prix" outlined ></v-text-field>
+            <v-text-field dense label="Prix" outlined v-model="product_price"></v-text-field>
           </v-col>
 
           <v-col cols="12" md="12"  >
@@ -32,6 +32,7 @@
             name="input-7-4"
             label="Descriptions"
             value=""
+            v-model="product_description"
           ></v-textarea>
           </v-col>
 
@@ -198,7 +199,7 @@
           </v-col>
 
           <v-col cols="12">
-            <v-btn color="primary" class="me-3 mt-4" >
+            <v-btn color="primary" class="me-3 mt-4" @click="submit()">
               Créer l'annonce
             </v-btn>
             <v-btn color="error" outlined class="mt-4" type="reset" >
@@ -211,12 +212,25 @@
   </v-card>
 </template>
 
-<script>
-import { mdiAlertOutline, mdiCloudUploadOutline, mdiAccountOutline, mdiEmailOutline, mdiCellphone, mdiLockOutline } from '@mdi/js'
 
-export default {
-  data () {
-        return {
+
+<script>
+  import { mapActions, mapGetters } from "vuex";
+  import { mdiAlertOutline, mdiCloudUploadOutline, mdiAccountOutline, mdiEmailOutline, mdiCellphone, mdiLockOutline } from '@mdi/js'
+  // import TutorialDataService from "../../services/TutorialDataService";
+
+
+  export default {
+
+    data() {
+      return {
+          product_name: "",
+          product_price: "",
+          product_location: "",
+          product_categorie: "",
+          product_description: "",
+          product_picture: "",
+
           icons: {
             mdiAlertOutline,
             mdiCloudUploadOutline,
@@ -225,14 +239,63 @@ export default {
             mdiCellphone,
             mdiLockOutline,
           },
+
           status:  ['Active', 'Inactive', 'Pending', 'Closed'],
 
-        }
+      }
+    },
+
+    watch: {
+      msgSuccessProduit() {
+        console.log("Le produit a bien été envoyé");
+      }
+    },
+
+    computed: {
+      ...mapGetters(["msgSuccessProduit", "listeProduits", "produit", "updateProduit"]),
+    },
+
+    methods: {
+      ...mapActions(["POST_PRODUIT", "GET_ALL_PRODUIT", "GET_SINGLE_PRODUIT", "UPDATE_A_PRODUCT"]),
+
+      submit() {
+        var data = {
+            product_name: this.product_name,
+            product_price: this.product_price,
+            product_location: this.product_location,
+            product_categorie: 'Telephones & Tablettes',
+            product_description: this.product_description,
+            product_picture: 'imgUrl',
+      };
+        // console.log(data);
+        this.POST_PRODUIT(data);
+        // this.UPDATE_A_PRODUCT(data);
       },
-}
-</script>
 
 
+    //   submit() {
+    //   var data = {
+    //         product_name: 'this.product_name',
+    //         product_price: 'this.product_price',
+    //         product_location: 'this.product_location',
+    //         product_categorie: 'Telephones & Tablettes',
+    //         product_description: 'this.product_description',
+    //         product_picture: 'imgUrl',
+    //   };
+
+    //   TutorialDataService.create(data)
+    //     .then(response => {
+    //       this.tutorial.id = response.data.id;
+    //       console.log(response.data);
+    //       this.submitted = true;
+    //     })
+    //     .catch(e => {
+    //       console.log(e);
+    //     });
+    // },
+    },
+  };
+  </script>
 
 <!-- <template>
   <v-form>
