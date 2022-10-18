@@ -1,19 +1,18 @@
 <template>
-  <div class="auth-wrapper auth-v1">
+  <div class="auth-wrapper auth-v1" >
     <div class="auth-inner">
       <v-card class="auth-card">
         <!-- logo -->
         <v-card-title class="d-flex align-center justify-center py-7">
           <router-link to="/" class="d-flex align-center"  >
             <v-img
-              :src="require('@/assets/images/logos/logo.svg')"
+              :src="require('@/assets/images/logos/logo.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
               contain
               class="me-3 "
             ></v-img>
-
             <h2 class="text-2xl font-weight-semibold">
               ZOROBY.COM
             </h2>
@@ -22,9 +21,52 @@
 
         <!-- title -->
         <v-card-text>
-          <p class="text-2xl font-weight-semibold text--primary mb-2 text-center">
-            Se connecter
+          <p class="mb-2 text-center">
+            Connectez-vous
           </p>
+          <!-- <v-alert
+          dense
+          outlined
+          type="error"
+          v-if="userNotFound"
+        >
+        <strong>Nom d'utilisateur</strong> ou <strong>mot de passe</strong> incorrect
+        </v-alert>
+        <v-alert
+        dense
+        outlined
+        type="error"
+        v-if="pswdInvalid"
+      >
+      <strong>Mot de passe</strong> incorrect
+      </v-alert> -->
+
+
+
+
+
+      <vs-button id="shoow" dark flat @click="active=true" :hidden="true">
+        Open Alert 10s
+      </vs-button>
+      <vs-alert danger :progress="progress" v-model="active">
+        <template #title>
+          Erreur :
+        </template>
+        <strong>Il semble votre nom d'utilisateur</strong> ou <strong>mot de passe</strong> sois incorrect
+      </vs-alert>
+
+      <vs-button id="shoow2" dark flat @click="active2=true" :hidden="true">
+        Open Alert 10s
+      </vs-button>
+      <vs-alert danger :progress="progress2" v-model="active2">
+        <template #title>
+          Erreur :
+        </template>
+        Nous avons verifié, votre nom d'utilsateur est correct mais votre <strong>mot de passe</strong> incorrect
+      </vs-alert>
+
+
+
           <!-- <p class="mb-2">
             Please sign-in to your account and start the adventure
           </p> -->
@@ -37,7 +79,7 @@
               v-model="email"
               outlined
               label="Email"
-              placeholder="john@example.com"
+              placeholder="Email"
               hide-details
               class="mb-3"
             ></v-text-field>
@@ -74,6 +116,7 @@
               block
               color="primary"
               class="mt-6"
+              @click="submit()"
             >
               SE CONNECTER
             </v-btn>
@@ -141,6 +184,7 @@
 <script>
 // eslint-disable-next-line object-curly-newline
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
+import { mapActions, mapGetters } from "vuex";
 import { ref } from '@vue/composition-api'
 
 export default {
@@ -172,6 +216,18 @@ export default {
     ]
 
     return {
+      active: false,
+        time: 6000,
+        progress: 0,
+
+        active2: false,
+        progress2: 0,
+
+
+
+
+      userNotFound: false,
+      pswdInvalid: false,
       isPasswordVisible,
       email,
       password,
@@ -183,6 +239,87 @@ export default {
       },
     }
   },
+
+  watch: {
+
+        active(val) {
+          if(val) {
+            var interval = setInterval(() => {
+              this.progress++
+            }, this.time / 100);
+
+            setTimeout(() => {
+              this.active = false
+              clearInterval(interval)
+              this.progress = 0
+            }, this.time);
+          }
+        },
+
+        active2(val) {
+          if(val) {
+            var interval = setInterval(() => {
+              this.progress2++
+            }, this.time / 100);
+
+            setTimeout(() => {
+              this.active2 = false
+              clearInterval(interval)
+              this.progress2 = 0
+            }, this.time);
+          }
+        },
+
+    MSG_AUTH_SUCESS_CLIENT() {
+      console.log('le guetter de authentification fonctionne');
+      if (this.MSG_AUTH_SUCESS_CLIENT.code_http === 200) {
+        console.log('utilisateur connecté');
+
+        this.$router.push({ name: "pages-account-settings" });
+        this.openNotification();
+      }
+    },
+
+    MSG_AUTH_ERROR_CLIENT() {
+      if (this.MSG_AUTH_ERROR_CLIENT.status === 401) {
+        // this.pswdInvalid = true
+        shoow2.click();
+        return
+      }
+      if (this.MSG_AUTH_ERROR_CLIENT.status) {
+        // this.userNotFound = true;
+        shoow.click();
+        return
+      }
+
+    }
+  },
+
+  computed: {
+      ...mapGetters(["MSG_AUTH_SUCESS_CLIENT", "MSG_AUTH_ERROR_CLIENT"]),
+    },
+
+  methods: {
+    ...mapActions(["AUTH_CLIENT"]),
+
+    submit() {
+        let User = {
+          email: this.email,
+          password: this.password,
+        };
+        this.AUTH_CLIENT(User);
+        },
+
+        openNotification(position = null, color = 'success', icon) {
+          const noti = this.$vs.notification({
+            square: true,
+            color,
+            position,
+            title: 'Connexion reussi ',
+            text: `Bienvenu sur Zoroby.com`
+          })
+        }
+      },
 }
 </script>
 

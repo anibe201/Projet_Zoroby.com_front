@@ -18,26 +18,19 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import Toast from 'primevue/toast';
 
 import Paginator from 'primevue/paginator';
-Vue.component('Paginator', Paginator);
+import VeeValidate from 'vee-validate';
 
-
+Vue.use(VeeValidate);
 Vue.use(PrimeVue);
 Vue.use(Vuesax);
 Vue.use(ConfirmationService);
 Vue.use(ToastService);
 
-
+Vue.component('Paginator', Paginator);
 Vue.component('Dialog', Dialog);
 Vue.component('Button', Button);
 Vue.component('ConfirmPopup', ConfirmPopup);
 Vue.component('Toast', Toast);
-
-
-
-
-
-
-
 
 Vue.config.productionTip = false
 

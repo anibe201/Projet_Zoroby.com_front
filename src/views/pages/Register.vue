@@ -9,7 +9,7 @@
             class="d-flex align-center"
           >
             <v-img
-              :src="require('@/assets/images/logos/logo.svg')"
+              :src="require('@/assets/images/logos/logo.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -25,21 +25,42 @@
 
         <!-- title -->
         <v-card-text>
-          <p class="text-2xl font-weight-semibold text--primary mb-2 text-center">
+          <!-- <p class="text-2xl font-weight-semibold text--primary mb-2 text-center">
 Pas encore membre ?
-          </p>
+          </p> -->
           <p class="mb-2 text-center">
             Inscrivez-vous gratuitement !
-
           </p>
+
+          <vs-button id="shoow" dark flat @click="active=true" :hidden="true">
+            Open Alert 10s
+          </vs-button>
+          <vs-alert danger :progress="progress" v-model="active">
+            <template #title>
+              Erreur :
+            </template>
+            Remplisser correctement tous les champs
+          </vs-alert>
+          <vs-button id="shoow2" dark flat @click="active2=true" :hidden="true">
+            Open Alert 10s
+          </vs-button>
+          <vs-alert danger :progress="progress2" v-model="active2">
+            <template #title>
+              Erreur :
+            </template>
+            Il semble que <strong>l'adress mail</strong> sois déja utilisé
+          </vs-alert>
+
+
         </v-card-text>
 
         <!-- login form -->
         <v-card-text>
           <v-form>
             <v-text-field
+              v-model="username"
               outlined
-              label="Nom"
+              label="Nom*"
               placeholder="Vianney"
               hide-details
               class="mb-3"
@@ -47,30 +68,32 @@ Pas encore membre ?
 
             <v-text-field
             outlined
-            label="Contact"
+            label="Contact*"
             placeholder="+225 .. .. .. .. 94"
             hide-details
             class="mb-3"
           ></v-text-field>
 
             <v-text-field
+              v-model="email"
               outlined
-              label="Email"
+              label="Email*"
               placeholder="anibe201@gmail.com"
               hide-details
               class="mb-3"
             ></v-text-field>
 
             <v-text-field
+              v-model="password"
               outlined
               :type="isPasswordVisible ? 'text' : 'password'"
-              label="Mot de passe"
+              label="Mot de passe*"
               placeholder="············"
               :append-icon="isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
               hide-details
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
-            <v-col
+            <!-- <v-col
             cols="12"
             md="6"
           >
@@ -90,7 +113,8 @@ Pas encore membre ?
               >
               </v-radio>
             </v-radio-group>
-          </v-col>
+          </v-col> -->
+          <v-spacer></v-spacer>
           <v-spacer></v-spacer>
             <v-checkbox
               hide-details
@@ -107,6 +131,7 @@ Pas encore membre ?
               block
               color="primary"
               class="mt-6"
+              @click="submit()"
             >
               S'inscrire
             </v-btn>
@@ -175,8 +200,12 @@ Pas encore membre ?
 // eslint-disable-next-line object-curly-newline
 import { mdiFacebook, mdiTwitter, mdiGithub, mdiGoogle, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import User from '../../models/user';
+import { mapActions, mapGetters } from "vuex";
+
 
 export default {
+
   setup() {
     const isPasswordVisible = ref(false)
     const socialLink = [
@@ -203,8 +232,18 @@ export default {
     ]
 
     return {
+      active: false,
+        time: 6000,
+        progress: 0,
+        active2: false,
+        progress2: 0,
+
       isPasswordVisible,
       socialLink,
+
+      username: "",
+      email: "",
+      password: "",
 
       icons: {
         mdiEyeOutline,
@@ -212,7 +251,90 @@ export default {
       },
     }
   },
-}
+
+  watch: {
+    active(val) {
+          if(val) {
+            var interval = setInterval(() => {
+              this.progress++
+            }, this.time / 100);
+
+            setTimeout(() => {
+              this.active = false
+              clearInterval(interval)
+              this.progress = 0
+            }, this.time);
+          }
+        },
+
+        active2(val) {
+          if(val) {
+            var interval = setInterval(() => {
+              this.progress2++
+            }, this.time / 100);
+
+            setTimeout(() => {
+              this.active2 = false
+              clearInterval(interval)
+              this.progress2 = 0
+            }, this.time);
+          }
+        },
+
+    MSG_SUCCESS_CLIENT() {
+      console.log('le guetter marche bien');
+      if (this.MSG_SUCCESS_CLIENT === "User registered successfully!") {
+        this.$router.push({ name:'pages-login' });
+        this.openNotification();
+        // this.toastSuccess()
+      }
+    },
+
+    MSG_ERROR_CLIENT() {
+      console.log('le guetter de MSG_ERROR_CLIENT marche bien');
+      if (this.MSG_ERROR_CLIENT.data.message === 'all field required') {
+        shoow.click();
+      }
+      if (this.MSG_ERROR_CLIENT.data.message === 'Failed! Email is already in use!') {
+        shoow2.click();
+      }
+      // if (this.MSG_ERROR_CLIENT.data.message === 'Failed! Username is already in use!') {
+      //   shoow.click();
+      // }
+    },
+  },
+
+  computed: {
+      ...mapGetters(["MSG_SUCCESS_CLIENT", "MSG_ERROR_CLIENT"]),
+    },
+
+
+
+
+  methods: {
+    ...mapActions(["ADD_CLIENT"]),
+
+    submit() {
+        let User = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+        console.log(User);
+        this.ADD_CLIENT(User);
+        },
+
+        openNotification(position = null, color = 'success', icon) {
+          const noti = this.$vs.notification({
+            icon,
+            color,
+            position,
+            title: 'Inscription reussi ',
+            text: `Votre inscription à zoroby.com a été un succès, veuillez à présent vous connecter 👉 Vuesax3.x`
+          })
+        }
+      },
+  }
 </script>
 
 <style lang="scss">

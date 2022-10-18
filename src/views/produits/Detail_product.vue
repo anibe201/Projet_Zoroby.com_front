@@ -59,7 +59,7 @@
                     <v-icon color="primary">
                       {{ icons.mdiLockOpenOutline }}
                     </v-icon>
-                    <span class="ms-3">Lieu : <strong> Abobo</strong></span>
+                    <span class="ms-3">Lieu : <strong>{{ show.product_location }}</strong></span>
                   </p>
                 </div>
 
@@ -100,7 +100,7 @@
                     <v-icon color="primary">
                       {{ icons.mdiAccountOutline }}
                     </v-icon>
-                    <span class="ms-3"> Publiée : <strong> Aujourd'hui</strong></span>
+                    <span class="ms-3"> Publiée : <strong>{{ show.createdAt }}</strong></span>
                   </p>
                   <p class="d-flex align-center mb-0">
                     <v-icon color="primary">

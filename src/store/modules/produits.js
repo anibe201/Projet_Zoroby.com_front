@@ -85,10 +85,9 @@ const getters = {
 const actions = {
 
   POST_PRODUIT({ commit }, data) {
-        Api.post("/products/", data)
+        Api.post("/productUser/", data)
             .then(response => {
                 commit("setmsgSuccessProduits", response.data)
-                commit("setPost", true)
                 console.log(response.data);
             })
             .catch((error) => {
@@ -97,7 +96,7 @@ const actions = {
             })
     },
     GET_ALL_PRODUIT({ commit }) {
-        Api.get("/products")
+        Api.get("/product")
             .then(response => {
                 commit("setListProduits", response.data)
                 console.log(response.data);
@@ -108,7 +107,7 @@ const actions = {
     },
 
     GET_SINGLE_PRODUIT({ commit }, id) {
-        Api.get("/products/" + id)
+        Api.get("/product/" + id)
             .then(response => {
                 commit("setProduit", response.data)
                 console.log(response.data);
@@ -118,8 +117,8 @@ const actions = {
             })
     },
 
-    UPDATE_A_PRODUCT({ commit },id, data) {
-        Api.put("/products/" + 29, data)
+    UPDATE_A_PRODUCT({ commit }, id, data) {
+        Api.put("/productUser/" + 29, data)
             .then(response => {
                 commit("setupProduit", response.data)
                 console.log(response.data)

@@ -60,9 +60,8 @@
             {{ icons.mdiAccountOutline }}
           </v-icon>
         </v-list-item-icon>
-        <v-list-item-content><router-link to="/pages/account-settings">
+        <v-list-item-content @click="goToProfil()">
           <v-list-item-title>Profil</v-list-item-title>
-        </router-link>
         </v-list-item-content>
       </v-list-item>
 
@@ -85,10 +84,8 @@
             {{ icons.mdiChatOutline }}
           </v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          <router-link to="/publication">
+        <v-list-item-content @click="goToPublication()">
             <v-list-item-title>Publier une annonce</v-list-item-title>
-          </router-link>
         </v-list-item-content>
       </v-list-item>
 
@@ -139,7 +136,7 @@
             {{ icons.mdiLogoutVariant }}
           </v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
+        <v-list-item-content @click="userLogout()">
           <v-list-item-title>Se déconnecter</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -174,6 +171,21 @@ export default {
       },
     }
   },
+
+  methods: {
+    userLogout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("userauth");
+      window.location.href = '/'
+
+    },
+    goToPublication() {
+      this.$router.push({ name: "publication" });
+    },
+    goToProfil() {
+      this.$router.push({ name: "pages-account-settings" });
+    }
+  }
 }
 </script>
 

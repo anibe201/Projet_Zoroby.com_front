@@ -36,7 +36,7 @@
           ></v-textarea>
           </v-col>
 
-          <v-col cols="12" md="7" >
+          <v-col cols="12" md="9" >
             <v-card-text class="d-flex">
 
               <v-avatar rounded size="120"  class="me-6" >
@@ -45,11 +45,18 @@
 
               <!-- upload photo -->
               <div>
-                <v-btn color="primary" class="me-3 mt-5" @click="$refs.refInputEl.click()" >
+                <v-btn color="primary" class="me-3 mt-5" >
                   <v-icon class="d-sm-none">
                     {{ icons.mdiCloudUploadOutline }}
                   </v-icon>
-                  <span class="d-none d-sm-block">Upload new photo</span>
+                  <input
+                  type="file"
+                  name="photoUser"
+                  id="photoUser"
+                  ref="photoUser"
+                  @change="onFileCharge('photoUser')"
+                />
+                  <!-- <span class="d-none d-sm-block">Upload new photo</span> -->
                 </v-btn>
 
                 <input ref="refInputEl" type="file" accept=".jpeg,.png,.jpg,GIF" :hidden="true" />
@@ -58,12 +65,12 @@
                   Reset
                 </v-btn>
                 <p class="text-sm mt-5">
-                  Allowed JPG, GIF or PNG. Max size of 800K
+                  Accepté : JPG or PNG
                 </p>
               </div>
             </v-card-text>
           </v-col>
-          <v-col
+          <!-- <v-col
             cols="12"
             md="5"
           >
@@ -77,11 +84,11 @@
               label="Langue"
               :items="['English','Spanish','French','German']"
             ></v-select>
-          </v-col>
-          <v-divider></v-divider>
+          </v-col> -->
+          <!-- <v-divider></v-divider>
           <v-alert
           type="success"
-        >Vos informations personnel</v-alert>
+        >Vos informations personnel</v-alert> -->
 <v-spacer></v-spacer>
         <v-col
         cols="12"
@@ -224,12 +231,18 @@
 
     data() {
       return {
+        productID: null,
+        data: null,
+        percent: 0,
+          uploadfile: "photoUser",
+          inputFiles: { photoUser: "" },
           product_name: "",
           product_price: "",
           product_location: "",
           product_categorie: "",
           product_description: "",
           product_picture: "",
+          id_user: "",
 
           icons: {
             mdiAlertOutline,
@@ -248,143 +261,71 @@
     watch: {
       msgSuccessProduit() {
         console.log("Le produit a bien été envoyé");
-      }
+        // if(msgSuccessProduit === "succes !") {
+          console.log(this.msgSuccessProduit);
+          this.productID = this.msgSuccessProduit.id;
+          console.log(this.productID);
+           console.log("Le produit a bien été envoyé");
+           this.$router.push({ name: "publication-annonce-publier" , params: { id: this.productID}});
+        // }
+      },
+      FILES_PRODUCT() {
+        console.log("le fichier a bien été chargé");
+      // if (this.filesPictureUser.code_http === 200 || this.filesPictureUser.code_http === 201) {
+      //   this.msg_Success_Photo_User();
+      //   let imageUser = process.env.VUE_APP_UPLOAD + this.filesPictureUser["url"] ;
+      //   console.log(imageUser);
+      //   localStorage.setItem('image', imageUser);
+      //   this.image_url  = localStorage.getItem('image')
+      // }
+    },
     },
 
     computed: {
-      ...mapGetters(["msgSuccessProduit", "listeProduits", "produit", "updateProduit"]),
+      ...mapGetters(["msgSuccessProduit", "listeProduits", "produit", "updateProduit", "FILES_PRODUCT"]),
     },
 
     methods: {
-      ...mapActions(["POST_PRODUIT", "GET_ALL_PRODUIT", "GET_SINGLE_PRODUIT", "UPDATE_A_PRODUCT"]),
+      ...mapActions(["POST_PRODUIT", "GET_ALL_PRODUIT", "GET_SINGLE_PRODUIT", "UPDATE_A_PRODUCT", "SAVE_PRODUCT_FILES"]),
 
+      onFileCharge(filename) {
+        // this.inputFiles[filename] = this.$refs[filename].files[0].name;
+        this.SAVE_PRODUCT_FILES(this.$refs[filename].files[0]);
+      },
       submit() {
-        var data = {
+        this.data = {
             product_name: this.product_name,
             product_price: this.product_price,
             product_location: this.product_location,
             product_categorie: 'Telephones & Tablettes',
             product_description: this.product_description,
-            product_picture: 'imgUrl',
+            product_picture: 'C:\Users\AlexisAnohVianneyANI\Desktop\PERSO HYPER IMPORTANT\PROJETS\Projet Zoroby.com\test Projet Zoroby\AUTH\nodejs-upload-image-mysql-master/resources/static/assets/uploads/1666026541428-bezkoder-15.png',
+            id_user: '1'
       };
+
+      this.openLoading()
         // console.log(data);
-        this.POST_PRODUIT(data);
         // this.UPDATE_A_PRODUCT(data);
       },
+      openLoading() {
 
-
-    //   submit() {
-    //   var data = {
-    //         product_name: 'this.product_name',
-    //         product_price: 'this.product_price',
-    //         product_location: 'this.product_location',
-    //         product_categorie: 'Telephones & Tablettes',
-    //         product_description: 'this.product_description',
-    //         product_picture: 'imgUrl',
-    //   };
-
-    //   TutorialDataService.create(data)
-    //     .then(response => {
-    //       this.tutorial.id = response.data.id;
-    //       console.log(response.data);
-    //       this.submitted = true;
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //     });
-    // },
+          const loading = this.$vs.loading({
+            percent: this.percent
+          })
+          const interval = setInterval(() => {
+            if (this.percent < 100) {
+              // loading.changePercent(`${this.percent = this.percent + 10}%`)
+              loading.changePercent(`${this.percent = this.percent + 4}%`)
+            }
+          }, 60)
+          setTimeout(() => {
+            console.log('100% finish');
+            this.POST_PRODUIT(this.data);
+            loading.close()
+            clearInterval(interval)
+            this.percent = 0
+          }, 3000)
+        }
     },
   };
   </script>
-
-<!-- <template>
-  <v-form>
-    <v-text-field
-      v-model="firstname"
-      :prepend-inner-icon="icons.mdiAccountOutline"
-      label="First Name"
-      outlined
-      dense
-      placeholder="First Name"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="email"
-      :prepend-inner-icon="icons.mdiEmailOutline"
-      label="Email"
-      type="email"
-      outlined
-      dense
-      placeholder="Email"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="mobile"
-      :prepend-inner-icon="icons.mdiCellphone"
-      label="Mobile"
-      outlined
-      dense
-      type="number"
-      placeholder="Number"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="password"
-      :prepend-inner-icon="icons.mdiLockOutline"
-      label="Password"
-      outlined
-      dense
-      type="password"
-      placeholder="password"
-    ></v-text-field>
-
-    <v-checkbox
-      v-model="checkbox"
-      label="Remember me"
-      class="mt-0"
-    ></v-checkbox>
-
-    <v-btn color="primary">
-      Submit
-    </v-btn>
-    <v-btn
-      type="reset"
-      outlined
-      class="mx-2"
-    >
-      Reset
-    </v-btn>
-  </v-form>
-</template>
-
-<script>
-// eslint-disable-next-line object-curly-newline
-import { mdiAccountOutline, mdiEmailOutline, mdiCellphone, mdiLockOutline } from '@mdi/js'
-import { ref } from '@vue/composition-api'
-
-export default {
-  setup() {
-    const firstname = ref('')
-    const email = ref('')
-    const mobile = ref()
-    const password = ref()
-    const checkbox = ref(false)
-
-    return {
-      firstname,
-      email,
-      mobile,
-      password,
-      checkbox,
-
-      // icons
-      icons: {
-        mdiAccountOutline,
-        mdiEmailOutline,
-        mdiCellphone,
-        mdiLockOutline,
-      },
-    }
-  },
-}
-</script> -->

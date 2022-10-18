@@ -25,11 +25,14 @@
           ></v-text-field>
 
           <v-spacer></v-spacer>
-          <router-link :to="{ name:'pages-login' }" target="_blank"> <v-btn  class="ms-3">S'identifier</v-btn></router-link>
-          <router-link to="/pages/register" target="_blank"><v-btn color="primary"  class="ms-3">S'inscrire</v-btn></router-link>
+          <span v-if="!isUserLogged()">
+            <v-btn  class="ms-3" @click="goToLogin()">S'identifier</v-btn>
+            <v-btn color="primary"  class="ms-3" @click="goToRegister()">S'inscrire</v-btn>
+          </span>
           <!-- Right Content -->
           <theme-switcher  class="ms-3"></theme-switcher>
-          <v-btn
+          <span v-if="isUserLogged()">
+          <!-- <v-btn
             icon
             small
             class="ms-3"
@@ -37,8 +40,9 @@
             <v-icon>
               {{ icons.mdiBellOutline }}
             </v-icon>
-          </v-btn>
-          <app-bar-user-menu></app-bar-user-menu>
+          </v-btn> -->
+          <app-bar-user-menu ></app-bar-user-menu>
+          </span>
         </div>
       </div>
     </v-app-bar>
@@ -110,6 +114,21 @@ export default {
       },
     }
   },
+
+  methods: {
+    isUserLogged() {
+      const userDetails = JSON.parse(localStorage.getItem("user"));
+      if(userDetails !== null) {
+        return true
+      } return false
+    },
+    goToLogin() {
+      this.$router.push({ name: "pages-login" });
+    },
+    goToRegister() {
+      this.$router.push({ name: "pages-register" });
+    }
+  }
 }
 </script>
 
